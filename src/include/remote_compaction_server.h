@@ -20,7 +20,7 @@ private:
     
     rocksdb::Status do_compact();
 
-    const static int lsize=11;
+    const static size_t lsize=11;
     
     int portnum;
     int sock_id;
@@ -31,7 +31,7 @@ private:
 
     size_t psz;
     size_t isz;
-    size_t cur_isz;
+    size_t cur_insize;
 
     char path[256];
     char *input;

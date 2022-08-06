@@ -4,16 +4,16 @@
 
 //CompactionServiceImpl
 
-CompactionServiceImpl::CompactionServiceImpl(const std::string &db_path)
-    :   db_path_(db_path),db_dup_(nullptr),cur_outsize(BUFSIZ){
+CompactionServiceImpl::CompactionServiceImpl(const std::string &db_path, const int port)
+    :   db_path_(db_path),portnum(port),db_dup_(nullptr),cur_outsize(BUFSIZ){
 
     output=(char*)malloc(cur_outsize);
     assert(output!=nullptr);
 }
 
 CompactionServiceImpl::CompactionServiceImpl(
-    const std::string &db_path, const std::string &db_path_dup, const rocksdb::Options &options_dup)
-    :   db_path_(db_path),db_path_dup_(db_path_dup),options_dup_(options_dup),cur_outsize(BUFSIZ){
+    const std::string &db_path, const int port, const std::string &db_path_dup, const rocksdb::Options &options_dup)
+    :   db_path_(db_path),portnum(port),db_path_dup_(db_path_dup),options_dup_(options_dup),cur_outsize(BUFSIZ){
 
     output=(char*)malloc(BUFSIZ);
     assert(output!=nullptr);
@@ -67,15 +67,15 @@ rocksdb::CompactionServiceJobStatus CompactionServiceImpl::WaitForCompleteV2(
     jobs_.erase(iter);
 
     memset(input_sz,0,lsize);
-    memset(db_path_sz,0,lsize);
+    memset(path_sz,0,lsize);
 
-    sprintf(db_path_sz,"%lu",db_path_.size());
+    sprintf(path_sz,"%lu",db_path_.size());
     sprintf(input_sz,"%lu",compaction_service_input.size());
 
     //send input data
-    sock_id=connect_to_server("bodensteins",portnum);
+    sock_id=connect_to_server(hostname,portnum);
         
-    if(write(sock_id,db_path_sz,lsize)!=lsize){
+    if(write(sock_id,path_sz,lsize)!=lsize){
         fprintf(stderr,"send db_path size fail\n");
         return rocksdb::CompactionServiceJobStatus::kFailure;
     }
@@ -113,6 +113,7 @@ rocksdb::CompactionServiceJobStatus CompactionServiceImpl::WaitForCompleteV2(
         output=(char*)realloc(output,cur_outsize);
         assert(output!=nullptr);
     }
+    memset(output,0,outsize);
 
     n=read(sock_id,output,outsize);
     if(n<=0){

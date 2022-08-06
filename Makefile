@@ -26,13 +26,23 @@ $T/server: ${SRV_SRC}
 	${CC} ${FLAGS} -o $@ $^ ${DYN_LIB}
 
 
+PROXY_SRC := \
+	$S/proxy_server.cpp \
+	$S/socket_lib.cpp
+
+$T/proxy: ${PROXY_SRC}
+	${CC} ${FLAGS} -o $@ $^ -pthread
+
+
 $T/generate: $S/generate.cpp
 	${CC} ${FLAGS} -o $@ $^ ${DYN_LIB}
 
 
-test: $S/test_client.cpp $S/test_server.cpp $S/socket_lib.cpp
-	${CC} $S/test_server.cpp $S/socket_lib.cpp -o $T/test_server
-	${CC} $S/test_client.cpp $S/socket_lib.cpp -o $T/test_client
+test: $S/test/test_client.cpp $S/test/test_proxy.cpp $S/test/test_server.cpp $S/socket_lib.cpp
+	${CC} $S/test/test_server.cpp $S/socket_lib.cpp -o $T/test_server
+	${CC} $S/test/test_proxy.cpp $S/socket_lib.cpp -o $T/test_proxy
+	${CC} $S/test/test_client.cpp $S/socket_lib.cpp -o $T/test_client
+	${CC} ${FLAGS} $S/test/test_db.cpp $S/socket_lib.cpp -o $T/test_db ${DYN_LIB}
 
 generate: $T/generate
 
@@ -40,7 +50,9 @@ client: $T/client
 
 server: $T/server
 
-all: client server
+proxy: $T/proxy
+
+all: client server proxy
 
 clean:
 	rm -rf $T/* $B/*
@@ -48,4 +60,4 @@ clean:
 clean-db:
 	rm -rf db/data1 db/data2
 
-.PHONY: client server  generate test all clean clean-db
+.PHONY: client server proxy generate test all clean clean-db

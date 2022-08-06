@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "include/socket_lib.h"
+#include "../include/socket_lib.h"
 
 int portnum=35000;
 int sock_id;
@@ -22,7 +22,7 @@ char sz2[11];
 const int lsize=11;
 
 //char sz3[11];
-std::string output("test output\nyes");
+std::string output("test output yes");
 //size_t sz1,sz2;
 
 int main(){
@@ -52,6 +52,7 @@ int main(){
         std::cout<<in2<<std::endl;
 
         write(fd,output.c_str(),output.size());
+        write(fd,nullptr,0);
     }
     
     return 0;

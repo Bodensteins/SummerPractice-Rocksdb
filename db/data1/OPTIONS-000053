@@ -135,7 +135,7 @@
   paranoid_file_checks=false
   check_flush_compaction_key_order=true
   blob_garbage_collection_force_threshold=1.000000
-  disable_auto_compactions=false
+  disable_auto_compactions=true
   memtable_prefix_bloom_size_ratio=0.000000
   report_bg_io_stats=false
   compaction_pri=kMinOverlappingRatio

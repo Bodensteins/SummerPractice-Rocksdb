@@ -15,9 +15,9 @@
 
 
 RemoteCompactionServer::RemoteCompactionServer(int port)
-    :   portnum(port),cur_isz(BUFSIZ/2){
+    :   portnum(port),cur_insize(BUFSIZ/2){
 
-    input=(char*)malloc(cur_isz);
+    input=(char*)malloc(cur_insize);
     assert(input!=nullptr);
 
     init_options();
@@ -64,6 +64,8 @@ void RemoteCompactionServer::accept_request(int sock_id){
     int fd;
     while(true){
         fd=accept(sock_id,nullptr,nullptr);
+        printf("accept\n");
+
         memset(path_sz,0,lsize);
         memset(input_sz,0,lsize);
 
@@ -80,7 +82,7 @@ void RemoteCompactionServer::accept_request(int sock_id){
         isz=atol(input_sz);
         //fprintf(stdout,"input size:%lu\n",isz);
 
-        //accept meta data and input
+        //accept path and input
         memset(path,0,sizeof(path));
         int n=read(fd,path,psz);
         if(n!=psz){
@@ -89,9 +91,9 @@ void RemoteCompactionServer::accept_request(int sock_id){
         }
         //fprintf(stdout,"path:%s\n",path);
         
-        if(cur_isz<=isz){
-            cur_isz=2*isz;
-            input=(char*)realloc(input,cur_isz);
+        if(cur_insize<=isz){
+            cur_insize=2*isz;
+            input=(char*)realloc(input,cur_insize);
         }
         memset(input,0,BUFSIZ);
         n=read(fd,input,isz);

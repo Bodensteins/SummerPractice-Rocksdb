@@ -18,9 +18,10 @@
 
 class CompactionServiceImpl : public rocksdb::CompactionService {
 public:
-    CompactionServiceImpl(const std::string &db_path);
+    CompactionServiceImpl(const std::string &db_path, const int port);
 
-    CompactionServiceImpl(const std::string &db_path, const std::string &db_path_dup, const rocksdb::Options &options_dup);
+    CompactionServiceImpl(
+      const std::string &db_path, const int port, const std::string &db_path_dup, const rocksdb::Options &options_dup);
 
     ~CompactionServiceImpl();
 
@@ -41,8 +42,10 @@ private:
         const std::string &compaction_service_input,
         std::string* compaction_service_result);
 
-    const static int portnum=30000;
-    const static int lsize=11;
+    const static size_t lsize=11;
+
+    const char *hostname="bodensteins";
+    int portnum;
 
     std::atomic_int compaction_num_{0};
     const std::string db_path_;
@@ -53,7 +56,7 @@ private:
     rocksdb::Options options_dup_;
 
     int sock_id;
-    char db_path_sz[lsize];
+    char path_sz[lsize];
     char input_sz[lsize];
     char output_sz[lsize];
     char *output;

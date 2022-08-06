@@ -11,16 +11,16 @@
 
 #include <string>
 
-#include "include/socket_lib.h"
+#include "../include/socket_lib.h"
 
 
 
-int portnum=35000;
+int portnum=32000;
 int sock_id;
 int lsize=11;
 
 std::string input1("test1 why do you do this");
-std::string input2("test2 stryyyyy yes ma\nrii");
+std::string input2("test2 stryyyyy yes ma nrii");
 
 //const char* pathid="path 9";
 char sz1[11];
@@ -39,6 +39,8 @@ int main(){
 
     write(sock_id,input1.c_str(),input1.size());
     write(sock_id,input2.c_str(),input2.size());
+
+    write(sock_id,nullptr,0);
 
     memset(output,0,BUFSIZ);
     read(sock_id,output,BUFSIZ);
