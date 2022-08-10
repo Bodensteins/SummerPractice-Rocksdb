@@ -328,14 +328,17 @@ int threadnum=25;
 int whitch=0;
 
 ThreadPool<ProxyTask> *tp;
+std::vector<int> ports;
 
 void accept_request(int sock_id){
     int fd;
+    size_t ports_size=ports.size();
     while (true){
         fd=accept(sock_id,nullptr,nullptr);
 
-        whitch=(whitch+1)%2;
-        int port=whitch?realport1:realport2;
+        int port=ports[whitch];
+        whitch=(whitch+1)%ports_size;
+
         ProxyTask task(fd,port);
         tp->pushBackTask(task);
     }
@@ -343,9 +346,12 @@ void accept_request(int sock_id){
 }
 
 int main(int ac, char *av[]){
-    if(ac==3){
-        realport1=atoi(av[1]);
-        realport2=atoi(av[2]);
+    if(ac>1){
+        for(int i=1;i<ac;i++){
+            ports.push_back(atoi(av[i]));
+        }
+    }else{
+        ports.push_back(20000);
     }
 
     tp=new ThreadPool<ProxyTask>(threadnum);

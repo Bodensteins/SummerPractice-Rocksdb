@@ -1,7 +1,8 @@
 #ifndef _MYCMPCTSRV_H_
 #define _MYCMPCTSRV_H_
 
-#include <rocksdb/db.h>
+//#include <rocksdb/db.h>
+#include "db.h"
 #include <rocksdb/options.h>
 #include <rocksdb/slice.h>
 #include <rocksdb/write_batch.h>

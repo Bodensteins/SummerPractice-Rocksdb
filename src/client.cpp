@@ -27,24 +27,11 @@ int main(){
     string file4=path+"/000041.sst";
     string file5=path+"/000046.sst";
 
+    string file6=path+"/000047.sst";
+
     db->CompactFiles(CompactionOptions(),{file1,file2,file3},2);
     db->CompactFiles(CompactionOptions(),{file4,file5},3);
+    db->CompactFiles(CompactionOptions(),{file6},4);
 
-/*
-    WriteBatch batch;
-
-   for(int i=0;i<100000;i++){
-       batch.Put(to_string(i),to_string(2*i+1));
-   }
-   db->Write(WriteOptions(),&batch);
-
-   Iterator *iter=db->NewIterator(ReadOptions());
-   iter->SeekToFirst();
-
-    while(iter->Valid()){
-        cout<<iter->key().ToString()<<" "<<iter->value().ToString()<<endl;
-        iter->Next();
-    }
-*/
     return 0;
 }

@@ -79,7 +79,6 @@ void* ThreadPool<T>::doTask(void *args){
         T task;
         tp->popFrontTask(task);
         tp->unlock();
-        //printf("tid:%lu\n",pthread_self());
         task.run();
     }
     return nullptr;

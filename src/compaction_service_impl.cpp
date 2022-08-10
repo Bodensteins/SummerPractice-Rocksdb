@@ -108,7 +108,6 @@ rocksdb::CompactionServiceJobStatus CompactionServiceImpl::WaitForCompleteV2(
     //fprintf(stdout,"output size:%lu\n",outsize);
 
     if(cur_outsize<=outsize){
-        fprintf(stderr,"yes\n");
         cur_outsize=2*outsize;
         output=(char*)realloc(output,cur_outsize);
         assert(output!=nullptr);
